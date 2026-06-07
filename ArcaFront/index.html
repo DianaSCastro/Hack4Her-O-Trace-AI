@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Consola de Requisiciones Avanzada | Coca-Cola México</title>
+    <style>
+        :root {
+            --cc-red-gradient: linear-gradient(135deg, #bd0f26 0%, #e31837 50%, #5c0612 100%);
+            --cc-red: #E31837;
+            --cc-wine: #5C0612;
+            --cc-cream: #F5F1E9;
+            --cc-cream-light: #FDFBF9;
+            --cc-white: #FFFFFF;
+            --cc-dark: #231F20;
+            --cc-gray: #D1C9BC;
+            --radius-lg: 16px;
+            --radius-md: 8px;
+            --shadow: 0 10px 30px rgba(92, 6, 18, 0.08);
+            --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.04);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+        }
+
+        body {
+            background-color: var(--cc-cream);
+            color: var(--cc-dark);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            background-image: radial-gradient(circle at top right, rgba(227, 24, 55, 0.03), transparent 60%);
+        }
+
+        header {
+            background: var(--cc-red-gradient);
+            color: var(--cc-white);
+            padding: 3rem 2rem 4.5rem 2rem;
+            text-align: left;
+            position: relative;
+            box-shadow: inset 0 -10px 20px rgba(0,0,0,0.15), 0 10px 25px rgba(92, 6, 18, 0.15);
+            border-bottom-left-radius: 40px;
+            border-bottom-right-radius: 40px;
+            overflow: hidden;
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -10%;
+            width: 600px;
+            height: 600px;
+            background: rgba(255, 255, 255, 0.04);
+            border-radius: 45%;
+            pointer-events: none;
+            transform: rotate(15deg);
+        }
+
+        header::after {
+            content: '';
+            position: absolute;
+            bottom: -20px;
+            left: 0;
+            width: 100%;
+            height: 40px;
+            background: var(--cc-cream);
+            clip-path: ellipse(60% 40% at 50% 100%);
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        .brand-block {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .logo-container img {
+            max-width: 150px;
+            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.2));
+        }
+
+        .title-container h1 {
+            font-size: 1.8rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            text-transform: uppercase;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .title-container p {
+            font-size: 0.95rem;
+            color: rgba(255, 255, 255, 0.85);
+            margin-top: 0.2rem;
+        }
+
+        main {
+            max-width: 1400px;
+            width: 100%;
+            margin: -2.5rem auto 3rem auto;
+            padding: 0 1.5rem;
+            position: relative;
+            z-index: 3;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+        }
+
+        @media (min-width: 1024px) {
+            main {
+                grid-template-columns: 4fr 3fr;
+            }
+            .full-width-column {
+                grid-column: span 2;
+            }
+        }
+
+        .card {
+            background: var(--cc-white);
+            border-radius: var(--radius-lg);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            padding: 2rem;
+            box-shadow: var(--shadow);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 35px rgba(92, 6, 18, 0.12);
+        }
+
+        .card h2 {
+            color: var(--cc-wine);
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .card h2::before {
+            content: '';
+            display: inline-block;
+            width: 6px;
+            height: 18px;
+            background-color: var(--cc-red);
+            border-radius: 3px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1.2rem;
+        }
+
+        @media (min-width: 600px) {
+            .form-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .span-full {
+                grid-column: span 2;
+            }
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: #7A7265;
+            margin-bottom: 0.4rem;
+            letter-spacing: 0.3px;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 0.85rem 1rem;
+            border: 2px solid #EAE5DC;
+            border-radius: var(--radius-md);
+            background-color: var(--cc-cream-light);
+            font-size: 0.95rem;
+            color: var(--cc-dark);
+            font-weight: 500;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--cc-red);
+            background-color: var(--cc-white);
+            box-shadow: 0 0 0 4px rgba(227, 24, 55, 0.15);
+        }
+
+        input[readonly] {
+            background-color: #F1ECE3;
+            color: #615a4f;
+            border-color: #E2DBD0;
+            font-family: monospace;
+            cursor: not-allowed;
+            font-weight: bold;
+        }
+
+        .flow-container {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            height: 100%;
+        }
+
+        .flow-steps {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: var(--cc-cream-light);
+            padding: 1.2rem;
+            border-radius: var(--radius-md);
+            border: 1px dashed var(--cc-gray);
+            margin-bottom: 1.5rem;
+        }
+
+        .step {
+            text-align: center;
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: #9C9384;
+            flex: 1;
+        }
+
+        .step.active {
+            color: var(--cc-red);
+        }
+
+        .step-arrow {
+            color: var(--cc-gray);
+            font-weight: bold;
+        }
+
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+        }
+
+        .kpi-box {
+            background: linear-gradient(180deg, var(--cc-white) 0%, var(--cc-cream-light) 100%);
+            border: 1px solid #EAE5DC;
+            padding: 1.2rem;
+            border-radius: var(--radius-md);
+            text-align: center;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .kpi-val {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: var(--cc-wine);
+        }
+
+        .kpi-lbl {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: #7A7265;
+            text-transform: uppercase;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: var(--radius-md);
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .btn-primary {
+            background: var(--cc-red);
+            color: var(--cc-white);
+            width: 100%;
+        }
+
+        .btn-primary:hover {
+            background: var(--cc-wine);
+            transform: translateY(-1px);
+        }
+
+        .btn-success {
+            background: #1A7F43;
+            color: var(--cc-white);
+        }
+
+        .btn-success:hover {
+            background: #0F5229;
+            box-shadow: 0 6px 15px rgba(26, 127, 67, 0.3);
+        }
+
+        .table-toolbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .table-responsive {
+            overflow-x: auto;
+            border-radius: var(--radius-md);
+            border: 1px solid #EAE5DC;
+            box-shadow: var(--shadow-sm);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: var(--cc-white);
+            font-size: 0.9rem;
+        }
+
+        th {
+            background-color: var(--cc-wine);
+            color: var(--cc-white);
+            padding: 1rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            letter-spacing: 0.5px;
+        }
+
+        td {
+            padding: 1rem;
+            border-bottom: 1px solid #EAE5DC;
+            color: var(--cc-dark);
+        }
+
+        tr.new-row {
+            background-color: rgba(227, 24, 55, 0.04);
+            border-left: 4px solid var(--cc-red);
+        }
+
+        tr:hover {
+            background-color: var(--cc-cream-light);
+        }
+
+        .hash-tag {
+            font-family: 'Courier New', Courier, monospace;
+            background: #EAE5DC;
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            color: var(--cc-wine);
+            font-weight: bold;
+            display: inline-block;
+            max-width: 150px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .btn-delete {
+            background: none;
+            border: none;
+            color: var(--cc-red);
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .btn-delete:hover {
+            color: var(--cc-wine);
+            text-decoration: underline;
+        }
+
+        footer {
+            text-align: center;
+            padding: 2.5rem;
+            color: #7A7265;
+            font-size: 0.85rem;
+            margin-top: auto;
+            background: #EAE5DC;
+            border-top: 1px solid var(--cc-gray);
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="header-content">
+            <div class="brand-block">
+                <div class="logo-container">
+                    <img src="AC.MX_BIG.D-d3508e09.png" alt="Coca-Cola Logo">
+                </div>
+                <div class="title-container">
+                    <h1>Sistema de Requisiciones | Coca-Cola México</h1>
+                    <p>Módulo de Abastecimiento Interno Automatizado mediante Criptografía Estándar</p>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <!-- Panel Izquierdo: Captura de Requisición -->
+        <section class="card">
+            <h2>Capturar Requisición</h2>
+            <form id="form-requisicion" class="form-grid">
+                
+                <div class="form-group">
+                    <label for="id_businessunit">ID Business Unit</label>
+                    <select id="id_businessunit" required>
+                        <option value="">Seleccione Unidad...</option>
+                        <option value="1">1</option>
+                        <option value="5">5</option>
+                        <option value="8">8</option>
+                        <option value="12">12</option>
+                        <option value="19">19</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="id_linea">ID Línea (Auto-generado)</label>
+                    <input type="text" id="id_linea" readonly title="Se calcula de manera aleatoria automáticamente">
+                </div>
+
+                <div class="form-group span-full">
+                    <label for="id_pedido">ID Pedido Consecutivo (19 Dígitos)</label>
+                    <input type="text" id="id_pedido" readonly title="Consecutivo automático de 19 posiciones">
+                </div>
+
+                <div class="form-group">
+                    <label for="sku_solicitado">SKU Solicitado</label>
+                    <input type="text" id="sku_solicitado" placeholder="Ej. KO-355-LATA" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="sku_solicitado_hash">SKU Solicitado Hash (SHA-256)</label>
+                    <input type="text" id="sku_solicitado_hash" readonly placeholder="Estándar criptográfico en tiempo real">
+                </div>
+
+                <div class="form-group span-full">
+                    <label for="nombre_sku_solicitado">Nombre SKU Solicitado</label>
+                    <input type="text" id="nombre_sku_solicitado" placeholder="Ej. Coca-Cola Original 355ml" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="sku_solicitado_cambio">SKU Solicitado Cambio</label>
+                    <input type="text" id="sku_solicitado_cambio" placeholder="Ej. KO-355-SINAZ">
+                </div>
+
+                <div class="form-group">
+                    <label for="sku_solicitado_cambio_hash">SKU Cambio Hash (SHA-256)</label>
+                    <input type="text" id="sku_solicitado_cambio_hash" readonly placeholder="Estándar criptográfico en tiempo real">
+                </div>
+
+                <div class="form-group span-full">
+                    <label for="nombre_sku_solicitado_cambio">Nombre SKU Solicitado Cambio</label>
+                    <input type="text" id="nombre_sku_solicitado_cambio" placeholder="Ej. Coca-Cola Sin Azúcar 355ml">
+                </div>
+
+                <div class="form-group span-full" style="margin-top: 0.5rem;">
+                    <button type="submit" class="btn btn-primary">CAPTURAR REGISTRO</button>
+                </div>
+            </form>
+        </section>
+
+        <!-- Panel Derecho: KPIs y Flujo Informativo -->
+        <div class="flow-container">
+            <section class="card" style="margin-bottom: 1.5rem;">
+                <h2>Estatus del Proceso</h2>
+                <div class="flow-steps">
+                    <div class="step">TIENDA<br>INICIA</div>
+                    <div class="step-arrow">➔</div>
+                    <div class="step active">LLENADO<br>EN CURSO</div>
+                    <div class="step-arrow">➔</div>
+                    <div class="step">VERIFICACIÓN</div>
+                    <div class="step-arrow">➔</div>
+                    <div class="step">ENVÍO</div>
+                </div>
+            </section>
+
+            <section class="card" style="flex-grow: 1;">
+                <h2>Resumen Operativo</h2>
+                <div class="kpi-grid">
+                    <div class="kpi-box">
+                        <div class="kpi-val" id="kpi-registros">0</div>
+                        <div class="kpi-lbl">Renglones Llenados</div>
+                    </div>
+                </div>
+                <div style="margin-top: 1.5rem; color: #7A7265; font-size: 0.82rem; line-height: 1.5;">
+                </div>
+            </section>
+        </div>
+
+        <!-- Tabla Completa Inferior -->
+        <section class="card full-width-column">
+            <div class="table-toolbar">
+                <h2>Tabla de Seguimiento de SKU</h2>
+                <button id="btn-exportar" class="btn btn-success" style="display: none;">Descargar Reporte CSV</button>
+            </div>
+
+            <div class="table-responsive">
+                <table id="tabla-registros">
+                    <thead>
+                        <tr>
+                            <th>ID Business Unit</th>
+                            <th>Línea</th>
+                            <th>ID Pedido</th>
+                            <th>SKU Solicitado</th>
+                            <th>SKU Hash (SHA-256)</th>
+                            <th>Nombre SKU</th>
+                            <th>SKU Cambio</th>
+                            <th>SKU Cambio Hash</th>
+                            <th>Nombre SKU Cambio</th>
+                            <th>Acción</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr id="row-vacio">
+                            <td colspan="10" style="text-align: center; color: #7A7265; padding: 2.5rem; font-weight: 500;">
+                                Ningún registro cargado en el lote de requisiciones actual.
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>Oficial: COCA-COLA MÉXICO | Listas de Tiendas Departamentales y Centros de Llenado Autorizados © 2026</p>
+    </footer>
+
+    <script>
+        // Memoria del sistema
+        let datasetRequisiciones = [];
+        
+        // El consecutivo estricto arranca como BigInt para soportar con precisión los 19 dígitos requeridos en JavaScript
+        let consecutivoPedidoBase = 1000000000000000001n; 
+
+        // Captura de elementos DOM
+        const form = document.getElementById('form-requisicion');
+        const tablaBody = document.getElementById('tabla-registros').getElementsByTagName('tbody')[0];
+        const rowVacio = document.getElementById('row-vacio');
+        const btnExportar = document.getElementById('btn-exportar');
+        const kpiRegistros = document.getElementById('kpi-registros');
+
+        const inputLinea = document.getElementById('id_linea');
+        const inputPedido = document.getElementById('id_pedido');
+        const skuSol = document.getElementById('sku_solicitado');
+        const skuSolHash = document.getElementById('sku_solicitado_hash');
+        const skuCam = document.getElementById('sku_solicitado_cambio');
+        const skuCamHash = document.getElementById('sku_solicitado_cambio_hash');
+
+        // Inicializar los campos automatizados al cargar la aplicación
+        function inicializarCamposAutomatizados() {
+            inputLinea.value = generarIdLineaAleatorio();
+            inputPedido.value = consecutivoPedidoBase.toString();
+        }
+
+        // Generar un número aleatorio de entre 7 y 8 dígitos
+        function generarIdLineaAleatorio() {
+            const min = 1000000;  // Mínimo de 7 dígitos (1,000,000)
+            const max = 99999999; // Máximo de 8 dígitos (99,999,999)
+            return Math.floor(Math.random() * (max - min + 1)) + min;
+        }
+
+        // Cálculo Criptográfico usando el estándar real SHA-256 (Nativo del Navegador)
+        async function calcularSHA256(texto) {
+            if (!texto) return "";
+            const encoder = new TextEncoder();
+            const data = encoder.encode(texto);
+            const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+            const hashArray = Array.from(new Uint8Array(hashBuffer));
+            return hashArray.map(b => b.toString(16).padStart(2, '0')).join('').toUpperCase();
+        }
+
+        // Escucha en tiempo real para generar los estándares HASH correspondientes
+        skuSol.addEventListener('input', async () => {
+            skuSolHash.value = await calcularSHA256(skuSol.value);
+        });
+
+        skuCam.addEventListener('input', async () => {
+            skuCamHash.value = await calcularSHA256(skuCam.value);
+        });
+
+        // Manejador del Formulario (Agregar a Lista)
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const nuevoRegistro = {
+                id_temp: Date.now(),
+                bu: document.getElementById('id_businessunit').value,
+                linea: inputLinea.value,
+                pedido: inputPedido.value,
+                sku: skuSol.value,
+                sku_hash: skuSolHash.value,
+                nombre: document.getElementById('nombre_sku_solicitado').value,
+                sku_c: skuCam.value || "—",
+                sku_c_hash: skuCamHash.value || "—",
+                nombre_c: document.getElementById('nombre_sku_solicitado_cambio').value || "—"
+            };
+
+            datasetRequisiciones.push(nuevoRegistro);
+            
+            // Incrementar el número consecutivo BigInt de forma segura
+            consecutivoPedidoBase++;
+
+            // Resetear el formulario y refrescar los campos automáticos para el siguiente registro
+            form.reset();
+            inicializarCamposAutomatizados();
+            
+            renderTabla();
+        });
+
+        // Dibujar elementos en la tabla de seguimiento
+        function renderTabla() {
+            tablaBody.innerHTML = '';
+            kpiRegistros.textContent = datasetRequisiciones.length;
+
+            if (datasetRequisiciones.length === 0) {
+                tablaBody.appendChild(rowVacio);
+                btnExportar.style.display = 'none';
+                return;
+            }
+
+            btnExportar.style.display = 'inline-flex';
+
+            datasetRequisiciones.forEach((item, index) => {
+                const row = tablaBody.insertRow();
+                
+                // Efecto visual tridimensional a la última fila agregada
+                if (index === datasetRequisiciones.length - 1) {
+                    row.className = 'new-row';
+                }
+
+                row.insertCell(0).textContent = item.bu;
+                row.insertCell(1).textContent = item.linea;
+                row.insertCell(2).textContent = item.pedido;
+                row.insertCell(3).textContent = item.sku;
+                
+                const cHash = row.insertCell(4);
+                cHash.innerHTML = `<span class="hash-tag" title="${item.sku_hash}">${item.sku_hash}</span>`;
+                
+                row.insertCell(5).textContent = item.nombre;
+                row.insertCell(6).textContent = item.sku_c;
+                
+                const cHashCambio = row.insertCell(7);
+                if (item.sku_c_hash !== "—") {
+                    cHashCambio.innerHTML = `<span class="hash-tag" title="${item.sku_c_hash}">${item.sku_c_hash}</span>`;
+                } else {
+                    cHashCambio.textContent = "—";
+                }
+                
+                row.insertCell(8).textContent = item.nombre_c;
+
+                const actionCell = row.insertCell(9);
+                const deleteBtn = document.createElement('button');
+                deleteBtn.textContent = 'Remover';
+                deleteBtn.className = 'btn-delete';
+                deleteBtn.onclick = () => {
+                    datasetRequisiciones = datasetRequisiciones.filter(r => r.id_temp !== item.id_temp);
+                    renderTabla();
+                };
+                actionCell.appendChild(deleteBtn);
+            });
+        }
+
+        // Descarga de Documento CSV estructurada (UTF-8 con soporte Excel México)
+        btnExportar.addEventListener('click', function() {
+            const headers = ["id_businessunit", "id_linea", "id_pedido", "sku_solicitado", "sku_solicitado_hash", "nombre_sku_solicitado", "sku_solicitado_cambio", "sku_solicitado_cambio_hash", "nombre_sku_solicitado_cambio"];
+            let csvRows = [headers.join(",")];
+
+            datasetRequisiciones.forEach(item => {
+                const lineValues = [item.bu, item.linea, item.pedido, item.sku, item.sku_hash, item.nombre, item.sku_c, item.sku_c_hash, item.nombre_c]
+                    .map(v => {
+                        let textValue = String(v);
+                        if (textValue.includes(',') || textValue.includes('"') || textValue.includes('\n')) {
+                            textValue = textValue.replace(/"/g, '""');
+                            return `"${textValue}"`;
+                        }
+                        return textValue;
+                    });
+                csvRows.push(lineValues.join(","));
+            });
+
+            const blob = new Blob(["\ufeff" + csvRows.join("\n")], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement("a");
+            link.href = URL.createObjectURL(blob);
+            link.setAttribute("download", `requisiciones_operativas_${new Date().toISOString().slice(0,10)}.csv`);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        });
+
+        // Inicializar al cargar por primera vez
+        inicializarCamposAutomatizados();
+    </script>
+</body>
+</html>
